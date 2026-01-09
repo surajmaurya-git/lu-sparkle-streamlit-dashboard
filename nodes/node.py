@@ -80,7 +80,7 @@ def draw_unit_1_dashboard():
     device_parameters(node)
     # controllers_section(node)
     graph_section(node)
-    map_section(node)
+    # map_section(node)
 
 
 draw_unit_1_dashboard()
