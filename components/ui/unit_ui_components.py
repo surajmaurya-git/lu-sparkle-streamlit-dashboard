@@ -32,11 +32,7 @@ def unit_header(title, des=None, node_client=None, device_status_res=None):
             if device_status_res.get("device_status"):
                 device_status = "Online"
             else:
-                device_sta # with r1_cols[2]:
-        #     tds_2 = values["tds_2"]
-        #     if tds_2 is not None:
-        #         tds_2 = round(tds_2)
-        #         draw_custom_tile("TDS 2", f"{tds_2} ppm", "white")tus = "Offline"
+                device_status = "Offline"
         else:
             device_status = "..."
 
