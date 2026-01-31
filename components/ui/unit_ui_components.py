@@ -32,7 +32,11 @@ def unit_header(title, des=None, node_client=None, device_status_res=None):
             if device_status_res.get("device_status"):
                 device_status = "Online"
             else:
-                device_status = "Offline"
+                device_sta # with r1_cols[2]:
+        #     tds_2 = values["tds_2"]
+        #     if tds_2 is not None:
+        #         tds_2 = round(tds_2)
+        #         draw_custom_tile("TDS 2", f"{tds_2} ppm", "white")tus = "Offline"
         else:
             device_status = "..."
 
@@ -139,11 +143,11 @@ def cards_section(node_client=None, values: dict = {}):
                 draw_custom_tile("TDS 1", f"{tds_1} ppm", "white")
             # else:
             #     draw_custom_tile("TDS 1", "N/A", "red")
-        with r1_cols[2]:
-            tds_2 = values["tds_2"]
-            if tds_2 is not None:
-                tds_2 = round(tds_2)
-                draw_custom_tile("TDS 2", f"{tds_2} ppm", "white")
+        # with r1_cols[2]:
+        #     tds_2 = values["tds_2"]
+        #     if tds_2 is not None:
+        #         tds_2 = round(tds_2)
+        #         draw_custom_tile("TDS 2", f"{tds_2} ppm", "white")
             # else:
             #     draw_custom_tile("TDS 2", "N/A", "red")
 
