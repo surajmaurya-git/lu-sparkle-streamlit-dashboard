@@ -146,6 +146,19 @@ def cards_section(node_client=None, values: dict = {}):
         #         draw_custom_tile("TDS 2", f"{tds_2} ppm", "white")
             # else:
             #     draw_custom_tile("TDS 2", "N/A", "red")
+        with r1_cols[2]:
+            # st.write(values)
+            pump_run_time = values["PumpRunTime"]
+            if pump_run_time is not None:
+                draw_custom_tile("Pump Run Time", f"{round(pump_run_time)} sec", "white")
+            else:
+                draw_custom_tile("Pump Run Time", "N/A", "red")
+        with r1_cols[3]:
+            flow_rate = values["flowRate"]
+            if flow_rate is not None:
+                draw_custom_tile("Flow Rate", f"{round(flow_rate)} L/Min", "white")
+            else:
+                draw_custom_tile("Flow Rate", "N/A", "red")
 
 
 def settings_section(node_client=None, values: dict = {}):
