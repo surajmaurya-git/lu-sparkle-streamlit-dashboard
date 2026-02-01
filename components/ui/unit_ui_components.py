@@ -24,7 +24,7 @@ def unit_header(title, des=None, node_client=None, device_status_res=None):
     if title is None:
         st.error("Please provide a valid title.")
     VARIABLES = st.session_state.variables
-    headercols = st.columns([1, 0.12, 0.11, 0.11], gap="small")
+    headercols = st.columns([1, 0.12, 0.12, 0.12], gap="small")
     with headercols[0]:
         st.title(title, anchor=False)
     with headercols[1]:
@@ -119,7 +119,7 @@ def cards_section(node_client=None, values: dict = {}):
 
 
 def settings_section(node_client=None, values: dict = {}):
-    container = st.container(border=True, height=470)
+    container = st.container(border=True, height=450)
     with container:
         st.subheader(body="Subscription Management", anchor=False)
         r1_cols = st.columns([1, 1, 1, 1], gap="large")
@@ -153,6 +153,7 @@ def settings_section(node_client=None, values: dict = {}):
         if water_limit is not None and value is not None:
             if value >= water_limit and water_limit != 0:
                 st.warning("Water limit has been reached.", icon="🚨")
+        st.write("")
 
         con_1 = st.container(border=True, height=200)
         with con_1:

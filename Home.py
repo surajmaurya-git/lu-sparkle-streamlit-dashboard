@@ -51,7 +51,7 @@ def main():
 
 def project_setup():
     initialize_session_state() # Initialize Session State
-    # firebase_db_setup()  # Firebase client Setup
+    firebase_db_setup()  # Firebase client Setup
     st.session_state.http_client =requests.Session()
     # Manage Anedya Connection Credentials
     API_KEY=st.secrets["API_KEY"]
@@ -78,22 +78,27 @@ def drawLogin():
     st.navigation(pages,position="hidden")
 
     # Centered Layout with Glassmorphism feel
-    cols = st.columns([1, 2, 1])
+    cols = st.columns([1, 1.2, 1])
     with cols[1]:
-        st.markdown('<div class="glass-container">', unsafe_allow_html=True)
+        #st.markdown('<div class="glass-container">', unsafe_allow_html=True)
         
         # Smart RO Icon
         try:
-            subcol = st.columns([1, 1, 1])
+            subcol = st.columns([0.3,1,1.5,1], gap="small")
             with subcol[1]:
-                st.image("images/smart_ro_icon.png", width=120)
+                st.image("images/smart_ro_icon.png", width=200)
+            with subcol[2]:
+                st.write("")
+                st.write("")
+                st.write("")
+                st.write("")
+                st.markdown('<p class="login-title">Smart RO Dashboards</p>', unsafe_allow_html=True)
+                # Using the accent color for the 'Smart' part or entire title
+                st.markdown('<p class="login-subtitle">Intelligent Water Purification System</p>', unsafe_allow_html=True)
+
         except Exception:
             pass # Fallback if image fails
-            
-        # Using the accent color for the 'Smart' part or entire title
-        st.markdown('<p class="login-title">Smart RO Dashboard</p>', unsafe_allow_html=True)
-        st.markdown('<p class="login-subtitle">Intelligent Water Purification System</p>', unsafe_allow_html=True)
-        
+    
         username_inp = st.text_input("Email", placeholder="admin@example.com").strip()
         password_inp = st.text_input("Password", type="password", placeholder="••••••••").strip()
         
@@ -103,7 +108,7 @@ def drawLogin():
             check_credentials(username_inp, password_inp)
             
         st.markdown('</div>', unsafe_allow_html=True)
-
+ 
 
 def check_credentials(username,password):
     if username == st.secrets["SUPER_ADMIN_EMAIL"] and password == st.secrets["SUPER_ADMIN_CRED"]:

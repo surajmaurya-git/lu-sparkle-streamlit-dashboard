@@ -1,4 +1,4 @@
-# from google.cloud import firestore
+from google.cloud import firestore
 import os
 import json
 import streamlit as st
@@ -15,9 +15,9 @@ def firebase_db_setup():
         with open(FIREBASE_PRIVATE_KEY_PATH, "w") as outfile:
             json.dump(FIREBASE_PRIVATE_KEY_JSON, outfile)
 
-    # st.session_state.firestore_client = firestore.Client.from_service_account_json(
-    #     FIREBASE_PRIVATE_KEY_PATH
-    # )
+    st.session_state.firestore_client = firestore.Client.from_service_account_json(
+        FIREBASE_PRIVATE_KEY_PATH
+    )
 
 
 # Create a reference to the Google post.
