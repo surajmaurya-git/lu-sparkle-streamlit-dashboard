@@ -40,56 +40,12 @@ def unit_header(title, des=None, node_client=None, device_status_res=None):
         with st.container(border=False, height=40):
             if device_status == "Online":
                 st.markdown(
-                    f"""
-                    <div style="
-                        margin-top: 0px;
-                        height: 38px;
-                        margin-right: 0px;
-                        padding-top: 0;
-                        overflow: hidden;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
-                        font-size: 16px;
-                        line-height: 25px;
-                        color: white;
-                        font-weight: 600;
-                        background-color: green;
-                        border-radius: 6px;
-                        align-items: center;
-                        justify-content: center;
-                        text-align: center;
-                        display: flex;
-                    ">
-                        {device_status}
-                    </div>
-                    """,
+                    f'<div class="status-badge online">{device_status}</div>',
                     unsafe_allow_html=True,
                 )
             else:
                 st.markdown(
-                    f"""
-                    <div style="
-                        margin-top: 0px;
-                        height: 38px;
-                        margin-right: 0px;
-                        padding-top: 0;
-                        overflow: hidden;
-                        white-space: nowrap;
-                        text-overflow: ellipsis;
-                        font-size: 16px;
-                        line-height: 25px;
-                        color: white;
-                        font-weight: 600;
-                        background-color: red;
-                        border-radius: 6px;
-                        align-items: center;
-                        justify-content: center;
-                        text-align: center;
-                        display: flex;
-                    ">
-                        {device_status}
-                    </div>
-                    """,
+                    f'<div class="status-badge offline">{device_status}</div>',
                     unsafe_allow_html=True,
                 )
 

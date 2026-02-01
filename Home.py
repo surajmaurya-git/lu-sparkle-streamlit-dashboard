@@ -25,9 +25,17 @@ def V_SPACE(lines):
         st.write("&nbsp;")
 
 
+
+def load_css(file_name):
+    with open(file_name) as f:
+        st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
 def main():
     if "LoggedIn" not in st.session_state:
         st.session_state.LoggedIn = False
+    
+    # Load Custom CSS
+    load_css("css/style.css")
     st.markdown(hide_streamlit_style, unsafe_allow_html=True)
     
     # ---------------------- UI ---------------------------------------
@@ -39,7 +47,6 @@ def main():
             drawAdminDashboard()
         else:
             drawUsersDashboard()
-            # pass
 
 
 def project_setup():
@@ -70,19 +77,33 @@ def drawLogin():
     }
     st.navigation(pages,position="hidden")
 
-    cols = st.columns([1, 1.5, 1], gap="small")
-    with cols[0]:
-        pass
+    # Centered Layout with Glassmorphism feel
+    cols = st.columns([1, 2, 1])
     with cols[1]:
-            st.title("Sparkle Dashboard Login", anchor=False)
-            username_inp = st.text_input("Email").strip()
-            password_inp = st.text_input("Password", type="password").strip()
-            submit_button = st.button(label="Submit")
-            if submit_button:
-                username_inp = username_inp
-                check_credentials(username_inp, password_inp)
-                print()
+        st.markdown('<div class="glass-container">', unsafe_allow_html=True)
+        
+        # Smart RO Icon
+        try:
+            subcol = st.columns([1, 1, 1])
+            with subcol[1]:
+                st.image("images/smart_ro_icon.png", width=120)
+        except Exception:
+            pass # Fallback if image fails
             
+        # Using the accent color for the 'Smart' part or entire title
+        st.markdown('<p class="login-title">Smart RO Dashboard</p>', unsafe_allow_html=True)
+        st.markdown('<p class="login-subtitle">Intelligent Water Purification System</p>', unsafe_allow_html=True)
+        
+        username_inp = st.text_input("Email", placeholder="admin@example.com").strip()
+        password_inp = st.text_input("Password", type="password", placeholder="••••••••").strip()
+        
+        st.write("") # Spacer
+        
+        if st.button("Sign In", use_container_width=True):
+            check_credentials(username_inp, password_inp)
+            
+        st.markdown('</div>', unsafe_allow_html=True)
+
 
 def check_credentials(username,password):
     if username == st.secrets["SUPER_ADMIN_EMAIL"] and password == st.secrets["SUPER_ADMIN_CRED"]:

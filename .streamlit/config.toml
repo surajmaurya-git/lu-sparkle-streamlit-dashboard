@@ -1,16 +1,10 @@
 [theme]
-base="light"
-# Primary accent color for interactive elements.
-#primaryColor = "#FFFFFF"
-
-# Background color for the main content area.
-#backgroundColor = "#FFFFFF"
-
-# Background color used for the sidebar and most interactive widgets.
-#secondaryBackgroundColor = "#1E2640"
-
-# Color used for almost all text.
-#textColor = "#262730"
+base="dark"
+primaryColor="#00d4ff"
+backgroundColor="#0f172a"
+secondaryBackgroundColor="#1e293b"
+textColor="#e2e8f0"
+font="sans serif"
 
 [server]
 fileWatcherType = "poll"
