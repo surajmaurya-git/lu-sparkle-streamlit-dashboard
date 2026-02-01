@@ -15,6 +15,7 @@ from components.ui.time_range_controller import (
 )
 
 from components.custome_component import draw_custom_tile
+import json
 
 is_options_changed = False
 
@@ -164,7 +165,7 @@ def cards_section(node_client=None, values: dict = {}):
 def settings_section(node_client=None, values: dict = {}):
     container = st.container(border=True, height=470)
     with container:
-        st.header(body="Subscription Management", anchor=False)
+        st.subheader(body="Subscription Management", anchor=False)
         r1_cols = st.columns([1, 1, 1, 1], gap="large")
         value, water_limit, expiry = -1, 0, ""
 
@@ -197,7 +198,7 @@ def settings_section(node_client=None, values: dict = {}):
             if value >= water_limit and water_limit != 0:
                 st.warning("Water limit has been reached.", icon="🚨")
 
-        con_1 = st.container(border=True)
+        con_1 = st.container(border=True, height=200)
         with con_1:
             st.subheader("Renew Plan", anchor=False)
             # cols= st.columns([1, 1,1], gap="small")
@@ -325,18 +326,43 @@ def settings_section(node_client=None, values: dict = {}):
 
 
 def device_parameters(node_client=None):
-    container = st.container(border=True, height=220)
+    container = st.container(border=True,)
     with container:
         st.subheader(body="Device Parameters", anchor=False)
-        # res = node_client.get_valueStore(key="PlanStatus")
         r1_cols = st.columns([1, 1, 1, 1], gap="small")
+        res = node_client.get_valueStore(key="filterGroup1")
+        values=(dict(res)["value"])
+        if isinstance(values, str):
+            values = json.loads(values)
         with r1_cols[0]:
-            draw_custom_tile("Device Health", "100%", "green")
-        # with r1_cols[1]:
-        #     draw_custom_tile("Pump", "OFF")
+            cont=st.container(border=True)
+            with cont:
+                value=values.get("filter1", 0)
+                st.progress(value, text="Filter 1", width="stretch")
+                st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
+        with r1_cols[1]:
+            cont=st.container(border=True)
+            with cont:
+                value=values.get("filter2", 0)
+                st.progress(value, text="Filter 2", width="stretch")
+                st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
+        with r1_cols[2]:
+            cont=st.container(border=True)
+            with cont:
+                value=values.get("filter3", 0)
+                st.progress(value, text="Filter 3", width="stretch")
+                st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
+        with r1_cols[3]:
+            cont=st.container(border=True)
+            with cont:
+                value=values.get("filter4", 0)
+                st.progress(value, text="Filter 4", width="stretch")
+                st.text(f"{value}% | Capacity:  L  |  Total water filtered: ")
+        
+        r2_cols=st.columns([1,1,1,1], gap="small")
+        
 
-        # with r1_cols[2]:
-        #      draw_custom_tile("Motor 2 Status", "ON", "green")
+        
 
 
 def gauge_section(node_client=None):
