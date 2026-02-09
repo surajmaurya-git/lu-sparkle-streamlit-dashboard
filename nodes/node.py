@@ -86,7 +86,7 @@ def draw_unit_1_dashboard():
     cards_section(node, values)
     settings_section(node, values)
     device_parameters(node)
-    # controllers_section(node)
+    controllers_section(node)
     graph_section(node)
     # map_section(node)
 

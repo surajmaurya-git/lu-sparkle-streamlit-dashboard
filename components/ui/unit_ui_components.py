@@ -151,7 +151,8 @@ def cards_section(node_client=None, values: dict = {}):
             # st.write(values)
             pump_run_time = values["PumpRunTime"]
             if pump_run_time is not None:
-                draw_custom_tile("Pump Run Time", f"{round(pump_run_time)} sec", "white")
+                pump_run_time_hrs=pump_run_time/(60*60)
+                draw_custom_tile("Pump Run Time", f"{pump_run_time_hrs :.2f} Hours", "white")
             else:
                 draw_custom_tile("Pump Run Time", "N/A", "red")
         with r1_cols[3]:
@@ -334,32 +335,33 @@ def device_parameters(node_client=None):
         values=(dict(res)["value"])
         if isinstance(values, str):
             values = json.loads(values)
-        with r1_cols[0]:
-            cont=st.container(border=True)
-            with cont:
-                value=values.get("filter1", 0)
-                st.progress(value, text="Filter 1", width="stretch")
-                st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
-        with r1_cols[1]:
-            cont=st.container(border=True)
-            with cont:
-                value=values.get("filter2", 0)
-                st.progress(value, text="Filter 2", width="stretch")
-                st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
-        with r1_cols[2]:
-            cont=st.container(border=True)
-            with cont:
-                value=values.get("filter3", 0)
-                st.progress(value, text="Filter 3", width="stretch")
-                st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
-        with r1_cols[3]:
-            cont=st.container(border=True)
-            with cont:
-                value=values.get("filter4", 0)
-                st.progress(value, text="Filter 4", width="stretch")
-                st.text(f"{value}% | Capacity:  L  |  Total water filtered: ")
-        
-        r2_cols=st.columns([1,1,1,1], gap="small")
+        if values is not None:
+            with r1_cols[0]:
+                cont=st.container(border=True)
+                with cont:
+                    value=values.get("filter1", 0)
+                    st.progress(value if value is not None else 0, text="Filter 1", width="stretch")
+                    st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
+            with r1_cols[1]:
+                cont=st.container(border=True)
+                with cont:
+                    value=values.get("filter2", 0)
+                    st.progress(value, text="Filter 2", width="stretch")
+                    st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
+            with r1_cols[2]:
+                cont=st.container(border=True)
+                with cont:
+                    value=values.get("filter3", 0)
+                    st.progress(value, text="Filter 3", width="stretch")
+                    st.text(f"Filter Life Used: {value}%  |  Total water filtered: ")
+            with r1_cols[3]:
+                cont=st.container(border=True)
+                with cont:
+                    value=values.get("filter4", 0)
+                    st.progress(value, text="Filter 4", width="stretch")
+                    st.text(f"{value}% | Capacity:  L  |  Total water filtered: ")
+            
+            r2_cols=st.columns([1,1,1,1], gap="small")
         
 
         
@@ -504,53 +506,67 @@ def controllers_section(node_client=None):
     container = st.container(border=True)
     with container:
         st.subheader(body="Controllers", anchor=False)
-        sync_controllers_state(node_client=node_client)
-        r1_cols = st.columns([1, 1, 1, 1], gap="small")
+        r1_cols = st.columns([1, 1, 1, 1,1], gap="small")
+        # sync_controllers_state(node_client=node_client)
+        # with r1_cols[0]:
+        #     st.subheader("Door")
+        #     state = st.button(st.session_state.door, key="door_key")
+        #     if state:
+        #         if st.session_state.door == "Open Door":
+        #             st.session_state.door = "Close Door"
+        #             node_client.set_valueStore(key="door", value=1, type="float")
+        #         else:
+        #             st.session_state.door = "Open Door"
+        #             node_client.set_valueStore(key="door", value=0, type="float")
+        #         st.rerun()
+        # with r1_cols[1]:
+        #     st.subheader("Light")
+        #     state = st.button(st.session_state.light, key="light_toggle")
+        #     if state:
+        #         if st.session_state.light == "Turn Light On":
+        #             st.session_state.light = "Turn Light Off"
+        #             node_client.set_valueStore(key="light", value=1, type="float")
+        #         else:
+        #             st.session_state.light = "Turn Light On"
+        #             node_client.set_valueStore(key="light", value=0, type="float")
+        #         st.rerun()
+        r1_cols = st.columns([1, 1, 1, 1], gap="medium")
         with r1_cols[0]:
-            st.subheader("Door")
-            state = st.button(st.session_state.door, key="door_key")
-            if state:
-                if st.session_state.door == "Open Door":
-                    st.session_state.door = "Close Door"
-                    node_client.set_valueStore(key="door", value=1, type="float")
-                else:
-                    st.session_state.door = "Open Door"
-                    node_client.set_valueStore(key="door", value=0, type="float")
-                st.rerun()
+            res=node_client.get_valueStore(key="BypassIntervals")
+            value=res.get("value")
+            value= st.number_input("RO Run Time (s)",step=1, value=value)
+            r1_r1_cols=st.columns([0.7,1],gap="small")
+            with r1_r1_cols[0]:
+                pass    
+            with r1_r1_cols[1]:    
+                submit = st.button("Set", key="ro_set", width="stretch")
+                if submit:
+                    res=node_client.set_valueStore(key="BypassIntervals",value=value,type="float")
+                    # st.write(res)
+                    if(res.get("isSuccess") is True):
+                        st.toast("RO Run Time value updated",icon="🎉")
+                    else:
+                        # st.write(res)
+                        mess=f"Failed to set the RO Run Time"
+                        st.toast(mess,icon="❌")
         with r1_cols[1]:
-            st.subheader("Light")
-            state = st.button(st.session_state.light, key="light_toggle")
-            if state:
-                if st.session_state.light == "Turn Light On":
-                    st.session_state.light = "Turn Light Off"
-                    node_client.set_valueStore(key="light", value=1, type="float")
-                else:
-                    st.session_state.light = "Turn Light On"
-                    node_client.set_valueStore(key="light", value=0, type="float")
-                st.rerun()
-        with r1_cols[2]:
-            st.subheader("Fan")
-            state = st.button(st.session_state.fan, key="fan_toggle")
-            if state:
-                if st.session_state.fan == "Turn Fan On":
-                    st.session_state.fan = "Turn Fan Off"
-                    node_client.set_valueStore(key="fan", value=1, type="float")
-                else:
-                    st.session_state.fan = "Turn Fan On"
-                    node_client.set_valueStore(key="fan", value=0, type="float")
-                st.rerun()
-        with r1_cols[3]:
-            st.subheader("Massager")
-            state = st.button(st.session_state.massage, key="massage_toggle")
-            if state:
-                if st.session_state.massage == "Turn Massager On":
-                    st.session_state.massage = "Turn Massager Off"
-                    node_client.set_valueStore(key="massage", value=1, type="float")
-                else:
-                    st.session_state.massage = "Turn Massager On"
-                    node_client.set_valueStore(key="massage", value=0, type="float")
-                st.rerun()
-
+            res=node_client.get_valueStore(key="BypassROTimes")
+            value=res.get("value")
+            value= st.number_input("Bypass Run Time (s)",step=1, value=value)
+            r1_r1_cols=st.columns([0.7,1],gap="small")
+            with r1_r1_cols[0]:
+                pass    
+            with r1_r1_cols[1]:    
+                submit = st.button("Set",key="bypass_set", width="stretch")
+                if submit:
+                    res=node_client.set_valueStore(key="BypassROTimes",value=value,type="float")
+                    # st.write(res)
+                    if(res.get("isSuccess") is True):
+                        st.toast("Bypass Run Time value updated",icon="🎉")
+                    else:
+                        # st.write(res)
+                        mess=f"Failed to set the RO Run Time"
+                        st.toast(mess,icon="❌")
 
 def handle_change(*args, **kwargs):
     st.write("Selection changed!")
