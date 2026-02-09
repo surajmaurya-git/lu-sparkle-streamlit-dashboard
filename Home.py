@@ -81,20 +81,20 @@ def drawLogin():
     cols = st.columns([1, 1.2, 1])
     with cols[1]:
         #st.markdown('<div class="glass-container">', unsafe_allow_html=True)
-        
+         
         # Smart RO Icon
         try:
-            subcol = st.columns([0.3,1,1.5,1], gap="small")
-            with subcol[1]:
+            subcol = st.columns([1,1.5,0.9], gap="small")
+            with subcol[0]:
                 st.image("images/smart_ro_icon.png", width=200)
-            with subcol[2]:
+            with subcol[1]:
                 st.write("")
                 st.write("")
                 st.write("")
                 st.write("")
-                st.markdown('<p class="login-title">Smart RO Dashboards</p>', unsafe_allow_html=True)
+                st.markdown('<p class="login-title">Smart RO Dashboard</p>', unsafe_allow_html=True,width="content")
                 # Using the accent color for the 'Smart' part or entire title
-                st.markdown('<p class="login-subtitle">Intelligent Water Purification System</p>', unsafe_allow_html=True)
+                st.markdown('<p class="login-subtitle">Intelligent Water Purification System</p>', unsafe_allow_html=True,width="content")
 
         except Exception:
             pass # Fallback if image fails
