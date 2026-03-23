@@ -506,67 +506,61 @@ def controllers_section(node_client=None):
     container = st.container(border=True)
     with container:
         st.subheader(body="Controllers", anchor=False)
-        r1_cols = st.columns([1, 1, 1, 1,1], gap="small")
-        # sync_controllers_state(node_client=node_client)
-        # with r1_cols[0]:
-        #     st.subheader("Door")
-        #     state = st.button(st.session_state.door, key="door_key")
-        #     if state:
-        #         if st.session_state.door == "Open Door":
-        #             st.session_state.door = "Close Door"
-        #             node_client.set_valueStore(key="door", value=1, type="float")
-        #         else:
-        #             st.session_state.door = "Open Door"
-        #             node_client.set_valueStore(key="door", value=0, type="float")
-        #         st.rerun()
-        # with r1_cols[1]:
-        #     st.subheader("Light")
-        #     state = st.button(st.session_state.light, key="light_toggle")
-        #     if state:
-        #         if st.session_state.light == "Turn Light On":
-        #             st.session_state.light = "Turn Light Off"
-        #             node_client.set_valueStore(key="light", value=1, type="float")
-        #         else:
-        #             st.session_state.light = "Turn Light On"
-        #             node_client.set_valueStore(key="light", value=0, type="float")
-        #         st.rerun()
         r1_cols = st.columns([1, 1, 1, 1], gap="medium")
         with r1_cols[0]:
-            res=node_client.get_valueStore(key="BypassIntervals")
+            res=node_client.get_valueStore(key="TDSSetpoint")
             value=res.get("value")
-            value= st.number_input("RO Run Time (s)",step=1, value=value)
+            value= st.number_input("TDS Set Point",step=1, value=value)
             r1_r1_cols=st.columns([0.7,1],gap="small")
             with r1_r1_cols[0]:
-                pass    
+                pass
             with r1_r1_cols[1]:    
-                submit = st.button("Set", key="ro_set", width="stretch")
+                submit = st.button("Set", key="tds_set", width="stretch")
                 if submit:
-                    res=node_client.set_valueStore(key="BypassIntervals",value=value,type="float")
+                    res=node_client.set_valueStore(key="TDSSetpoint",value=value,type="float")
                     # st.write(res)
                     if(res.get("isSuccess") is True):
-                        st.toast("RO Run Time value updated",icon="🎉")
+                        st.toast("TDS Set Point value updated",icon="🎉")
                     else:
                         # st.write(res)
-                        mess=f"Failed to set the RO Run Time"
+                        mess=f"Failed to set the TDS Set Point value"
                         st.toast(mess,icon="❌")
-        with r1_cols[1]:
-            res=node_client.get_valueStore(key="BypassROTimes")
-            value=res.get("value")
-            value= st.number_input("Bypass Run Time (s)",step=1, value=value)
-            r1_r1_cols=st.columns([0.7,1],gap="small")
-            with r1_r1_cols[0]:
-                pass    
-            with r1_r1_cols[1]:    
-                submit = st.button("Set",key="bypass_set", width="stretch")
-                if submit:
-                    res=node_client.set_valueStore(key="BypassROTimes",value=value,type="float")
-                    # st.write(res)
-                    if(res.get("isSuccess") is True):
-                        st.toast("Bypass Run Time value updated",icon="🎉")
-                    else:
-                        # st.write(res)
-                        mess=f"Failed to set the RO Run Time"
-                        st.toast(mess,icon="❌")
+        # with r1_cols[1]:
+        #     res=node_client.get_valueStore(key="BypassIntervals")
+        #     value=res.get("value")
+        #     value= st.number_input("RO Run Time (s)",step=1, value=value)
+        #     r1_r1_cols=st.columns([0.7,1],gap="small")
+        #     with r1_r1_cols[0]:
+        #         pass    
+        #     with r1_r1_cols[1]:    
+        #         submit = st.button("Set", key="ro_set", width="stretch")
+        #         if submit:
+        #             res=node_client.set_valueStore(key="BypassIntervals",value=value,type="float")
+        #             # st.write(res)
+        #             if(res.get("isSuccess") is True):
+        #                 st.toast("RO Run Time value updated",icon="🎉")
+        #             else:
+        #                 # st.write(res)
+        #                 mess=f"Failed to set the RO Run Time"
+        #                 st.toast(mess,icon="❌")
+        # with r1_cols[2]:
+        #     res=node_client.get_valueStore(key="BypassROTimes")
+        #     value=res.get("value")
+        #     value= st.number_input("Bypass Run Time (s)",step=1, value=value)
+        #     r1_r1_cols=st.columns([0.7,1],gap="small")
+        #     with r1_r1_cols[0]:
+        #         pass    
+        #     with r1_r1_cols[1]:    
+        #         submit = st.button("Set",key="bypass_set", width="stretch")
+        #         if submit:
+        #             res=node_client.set_valueStore(key="BypassROTimes",value=value,type="float")
+        #             # st.write(res)
+        #             if(res.get("isSuccess") is True):
+        #                 st.toast("Bypass Run Time value updated",icon="🎉")
+        #             else:
+        #                 # st.write(res)
+        #                 mess=f"Failed to set the RO Run Time"
+        #                 st.toast(mess,icon="❌")
 
 def handle_change(*args, **kwargs):
     st.write("Selection changed!")

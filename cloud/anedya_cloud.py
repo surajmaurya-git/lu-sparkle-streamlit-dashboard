@@ -106,11 +106,19 @@ def anedya_getDeviceStatus(apiKey, nodeId) -> dict:
 
     errorCode = json.loads(responseMessage).get("errcode")
     if errorCode == 0:
-        device_status = json.loads(responseMessage).get("data")[nodeId].get("online")
-        value = {
-            "isSuccess": True,
-            "device_status": device_status,
-        }
+        data= json.loads(responseMessage).get("data")
+        # st.write(data)
+        if data and len(data) > 0:
+            device_status = json.loads(responseMessage).get("data")[nodeId].get("online")
+            value = {
+                "isSuccess": True,
+                "device_status": device_status,
+            }
+        else:
+            value = {
+                "isSuccess": True,
+                "device_status": None,
+            }
     else:
         print(responseMessage)
         # st.write("No previous value!!")
