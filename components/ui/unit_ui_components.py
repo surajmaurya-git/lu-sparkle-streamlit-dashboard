@@ -1,6 +1,8 @@
 import streamlit as st
+from streamlit.dataframe_util import Data
 import streamviz as sv
 from datetime import datetime, timedelta
+from dateutil import relativedelta
 import pytz
 import numpy as np
 import pandas as pd
@@ -121,25 +123,25 @@ def cards_section(node_client=None, values: dict = {}):
     with container:
         # st.subheader(body="Parameters", anchor=False)
         r1_cols = st.columns([1, 1, 1, 1], gap="large")
-        with r1_cols[0]:
-            left_water_limit = values["left_water_limit"]
-            if left_water_limit is not None:
-                if left_water_limit <= 0:
-                    left_water_limit = int(left_water_limit)
-                    draw_custom_tile("Remaining Water", f"{left_water_limit:.2f} L", "red")
-                else:
-                    draw_custom_tile(
-                        "Remaining Water", f"{left_water_limit:.2f} L", "white"
-                    )
-            else:
-                draw_custom_tile("Remaining Water", "N/A", "red")
-        with r1_cols[1]:
-            tds_1 = values["tds_1"]
-            if tds_1 is not None:
-                tds_1 = round(tds_1)
-                draw_custom_tile("TDS 1", f"{tds_1} ppm", "white")
-            # else:
-            #     draw_custom_tile("TDS 1", "N/A", "red")
+        # with r1_cols[0]:
+        #     left_water_limit = values["left_water_limit"]
+        #     if left_water_limit is not None:
+        #         if left_water_limit <= 0:
+        #             left_water_limit = int(left_water_limit)
+        #             draw_custom_tile("Remaining Water", f"{left_water_limit:.2f} L", "red")
+        #         else:
+        #             draw_custom_tile(
+        #                 "Remaining Water", f"{left_water_limit:.2f} L", "white"
+        #             )
+        #     else:
+        #         draw_custom_tile("Remaining Water", "N/A", "red")
+        # with r1_cols[1]:
+        #     tds_1 = values["tds_1"]
+        #     if tds_1 is not None:
+        #         tds_1 = round(tds_1)
+        #         draw_custom_tile("TDS 1", f"{tds_1} ppm", "white")
+        #     else:
+        #         draw_custom_tile("TDS 1", "N/A", "red")
         # with r1_cols[2]:
         #     tds_2 = values["tds_2"]
         #     if tds_2 is not None:
@@ -147,7 +149,7 @@ def cards_section(node_client=None, values: dict = {}):
         #         draw_custom_tile("TDS 2", f"{tds_2} ppm", "white")
             # else:
             #     draw_custom_tile("TDS 2", "N/A", "red")
-        with r1_cols[2]:
+        with r1_cols[0]:
             # st.write(values)
             pump_run_time = values["PumpRunTime"]
             if pump_run_time is not None:
@@ -155,7 +157,7 @@ def cards_section(node_client=None, values: dict = {}):
                 draw_custom_tile("Pump Run Time", f"{pump_run_time_hrs :.2f} Hours", "white")
             else:
                 draw_custom_tile("Pump Run Time", "N/A", "red")
-        with r1_cols[3]:
+        with r1_cols[1]:
             flow_rate = values["flowRate"]
             if flow_rate is not None:
                 draw_custom_tile("Flow Rate", f"{round(flow_rate)} L/Min", "white")
@@ -176,20 +178,20 @@ def settings_section(node_client=None, values: dict = {}):
                 draw_custom_tile("Total Water Consumption", f"{value:.2f} L", "white")
             else:
                 draw_custom_tile("Total Water Consumption", f"N/A", "white")
+        # with r1_cols[1]:
+        #     water_limit = values["water_limit"]
+        #     if water_limit is not None:
+        #         draw_custom_tile("Water Limit", f"{water_limit} L", "white")
+
+        #     else:
+        #         draw_custom_tile("Water Limit", f"N/A", "white")
+
         with r1_cols[1]:
-            water_limit = values["water_limit"]
-            if water_limit is not None:
-                draw_custom_tile("Water Limit", f"{water_limit} L", "white")
-
-            else:
-                draw_custom_tile("Water Limit", f"N/A", "white")
-
-        with r1_cols[2]:
             expiry = values["expiry"]
             if expiry is not None:
                 draw_custom_tile(
                     "Plan Expiry Date",
-                    f"{datetime.fromtimestamp(expiry).strftime('%Y-%m-%d')}",
+                    f"{datetime.fromtimestamp(expiry).strftime('%Y-%m-%d | %H:%M:%S')}",
                     "white",
                 )
             else:
@@ -209,21 +211,29 @@ def settings_section(node_client=None, values: dict = {}):
                 # gap="none",
                 vertical_alignment="bottom",
             )
+            recharge=1000000  # to means unlimited plan #removelater
+            # with r1_cols[0]:
+            #     # recharge = st.text_input(
+            #     #     "Recharge Quantity (in L)",
+            #     #     key="recharge_quantity",
+            #     #     value="0",
+            #     # )
             with r1_cols[0]:
-                recharge = st.text_input(
-                    "Recharge Quantity (in L)",
-                    key="recharge_quantity",
-                    value="0",
-                )
-            with r1_cols[1]:
-                date = st.date_input(
-                    "Expiry Date",
-                    key="expiry_date",
-                    value=datetime.now() + timedelta(days=30),
+                # date = st.date_input(
+                #     "Expiry Date",
+                #     key="expiry_date",
+                #     value=datetime.now() + timedelta(days=30),
+                # )
+                date_time=st.datetime_input(
+                    "Expiry Time",
+                    key="expiry_time",
+                    value=datetime.now() + relativedelta.relativedelta(months=1),
+                    step=300,
                 )
                 expiry = (
-                    int(datetime.strptime(str(date), "%Y-%m-%d").timestamp()) + 86400
+                    int(datetime.strptime(str(date_time), "%Y-%m-%d %H:%M:%S").timestamp())
                 )  # Adding 1 day to the epoch time
+                # st.write(f'Epoch Time: {expiry}')
             with r1_cols[2]:
                 data = node_client.get_valueStore(key="PlanStatus")
                 value = 0
@@ -240,8 +250,9 @@ def settings_section(node_client=None, values: dict = {}):
                             if value is None:
                                 st.error("Fail to get current recharge value")
                                 st.stop()
-                            recharge_value = value + recharge_value
-                            recharge_value = round(recharge_value, 2)
+                            # recharge_value = value + recharge_value
+                            # recharge_value = round(recharge_value, 2)
+                            recharge_value=10000000  # to means unlimited plan #removelater
                             if recharge_value >=0:
                                 if expiry < int(time.time()):
                                     st.toast("Expiry date cannot be in the past", icon="🚫")
