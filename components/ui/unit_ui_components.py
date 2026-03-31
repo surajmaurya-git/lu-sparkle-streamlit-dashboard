@@ -169,7 +169,7 @@ def settings_section(node_client=None, values: dict = {}):
     container = st.container(border=True, height=470)
     with container:
         st.subheader(body="Subscription Management", anchor=False)
-        r1_cols = st.columns([1, 1, 1, 1], gap="large")
+        r1_cols = st.columns([1, 1.3, 1, 1], gap="large")
         value, water_limit, expiry = -1, 0, ""
 
         with r1_cols[0]:
@@ -190,7 +190,7 @@ def settings_section(node_client=None, values: dict = {}):
             expiry = values["expiry"]
             if expiry is not None:
                 draw_custom_tile(
-                    "Plan Expiry Date",
+                    "Plan Expiry",
                     f"{datetime.fromtimestamp(expiry).strftime('%Y-%m-%d | %H:%M:%S')}",
                     "white",
                 )
