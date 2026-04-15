@@ -160,7 +160,7 @@ def cards_section(node_client=None, values: dict = {}):
         with r1_cols[1]:
             flow_rate = values["flowRate"]
             if flow_rate is not None:
-                draw_custom_tile("Flow Rate", f"{round(flow_rate)} L/Min", "white")
+                draw_custom_tile("Flow Rate", f"{flow_rate :.3f} L/Min", "white")
             else:
                 draw_custom_tile("Flow Rate", "N/A", "red")
 
